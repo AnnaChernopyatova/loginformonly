@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Login = styled.div`
-    width: 70%;
+    width: 50%;
     height: 70vh;
     margin: auto;
     margin-top: 30%;
@@ -10,7 +10,7 @@ const Login = styled.div`
 `;
 
 const InputBlock = styled.div`
-    height: 15vh;
+    height: 11vh;
 `;
 
 const InputLabel = styled.label`
@@ -30,6 +30,42 @@ const Input = styled.input`
     font-size: 0.99em;
     &:focus {
         outline: 2px solid #e2e2e2a0;
+    }
+`;
+
+const Checkbox = styled.input`
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 1px solid #111;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+
+    &:checked {
+        background: #ffffff;
+        top: 1px;
+    }
+`;
+
+const CheckboxLable = styled.label`
+    display: inline-block;
+    position: relative;
+    bottom: 6px;
+    padding-left: 13px;
+    cursor: pointer;
+    
+    ${Checkbox}:checked + &:after {
+    content: "";
+    opacity: 1;
+    position: absolute;
+    top: 0%;
+    left: -22px;
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    background-color: #006eff;
     }
 `;
 
@@ -79,19 +115,15 @@ export default function LogIn ({handleChangeAuthorisation}: authorisedProps){
                     Логин
 				</InputLabel>
 				<Input type='text' name= 'email' id='emailInputSI' value={email} onChange={handleChange} />
-				<span >This field can not be empty</span>
-				<span id='unvalidEmailWarning'>Please, write a valid email</span>
-				
 			</InputBlock>
 			<InputBlock>
 				<InputLabel >
-                    Password
+                    Пароль
 				</InputLabel>
 				<Input type='text' name='password' id='passwordInputSI' value={password} onChange={handleChange} />
-				<span className={password === '' ? 'inputBlock_warning' : 'inputBlock_warning__unactive'}>This field can not be empty</span>
-				<span className='inputBlock_warning__unactive' id='unvalidPasswordWarning'>Password must be at least 6 symbols</span>
-				
 			</InputBlock>
+			<Checkbox type ='checkbox' id="squaredCheckbox"/>
+			<CheckboxLable htmlFor='squaredCheckbox'>Запомнить пароль</CheckboxLable>
 			<button className='signInBlock_button' onClick={saveChanges}>Submit</button>
 		</Login>
 	);
