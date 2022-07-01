@@ -11,7 +11,7 @@ const Logotype = styled.h1`
     margin-top: 3%;
 `;
 
-export default function Logo() {
+export default function Logo(): JSX.Element {
 	return (
 		<Logotype>
             only.

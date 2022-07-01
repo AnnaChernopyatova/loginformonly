@@ -2,25 +2,32 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Login = styled.div`
-    width: 50%;
-    height: 70vh;
+    box-sizing: border-box;
+    width: 37%;
+    height: 60vh;
     margin: auto;
-    margin-top: 30%;
+    margin-top: 10%;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
+
+    @media screen and (min-width: 500px) and (max-width: 1200px) {
+        width: 60%;
+        margin-top: 15%;
+    }
 `;
 
 const InputBlock = styled.div`
-    height: 11vh;
+    height: 12.5vh;
 `;
 
 const InputLabel = styled.label`
-    margin-bottom: 1%;
+    margin-bottom: 1vh;
     display: block;
     font-size: 0.99em;
     font-weight: 500;
 `;
 
 const Input = styled.input`
+    box-sizing: border-box;
     padding-left: 3%;
     width: 100%;
     height: 5.5vh;
@@ -31,6 +38,34 @@ const Input = styled.input`
     &:focus {
         outline: 2px solid #e2e2e2a0;
     }
+`;
+
+const LoginInput = styled(Input)<{loginEmpty: boolean}>`
+    &:focus {
+        outline: ${props => props.loginEmpty && '1px solid#df8282'};
+        caret-color: ${props => props.loginEmpty && '#df8282'};
+    }
+`;
+
+const PasswordInput = styled(Input)<{passwordEmpty: boolean}>`
+    &:focus {
+        outline: ${props => props.passwordEmpty && '1px solid #df8282'};
+        caret-color: ${props => props.passwordEmpty && '#df8282'};
+    }
+`;
+
+const InputWarning = styled.p`
+    margin-top: 1%;
+    font-size: 0.8em;
+    color: #df8282;
+`;
+
+const LoginInputWarning = styled(InputWarning)<{loginEmpty: boolean}>`
+    display: ${props => !props.loginEmpty && 'none'};
+`;
+
+const PasswordInputWarning = styled(InputWarning)<{passwordEmpty: boolean}>`
+    display: ${props => !props.passwordEmpty && 'none'};
 `;
 
 const Checkbox = styled.input`
@@ -53,8 +88,9 @@ const CheckboxLable = styled.label`
     display: inline-block;
     position: relative;
     bottom: 6px;
-    padding-left: 13px;
+    padding-left: 2.5%;
     cursor: pointer;
+    font-size: 0.97em;
     
     ${Checkbox}:checked + &:after {
     content: "";
@@ -69,30 +105,70 @@ const CheckboxLable = styled.label`
     }
 `;
 
-interface authorisedProps{
-	handleChangeAuthorisation: () => void
+const Button = styled.button`
+    margin-top: 3vh;
+    width: 100%;
+    height: 5.5vh;
+    background-color: #006eff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.97em;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:active {
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+    }
+`;
+
+interface LoginProps {
+	handleChangeAuthorisation: () => void;
+    changeLoginEmpty: () => void;
+    changePasswordEmpty: () => void;
+    loginEmpty: boolean;
+    passwordEmpty: boolean;
 }
 
-export default function LogIn ({handleChangeAuthorisation}: authorisedProps){
-	const [email, setEmail] = React.useState<string>('');
+
+export default function LogIn (props: LoginProps): JSX.Element {
+	const [login, setLogin] = React.useState<string>('');
 	const [password, setPassword] = React.useState<string>('');
 
 	const handleChange = (e: React.SyntheticEvent): void => {
 		const target = e.target as HTMLInputElement;
 		if (target) {
-			if(target.name === 'email'){
-				setEmail(target.value);
+			if(target.name === 'login'){
+				if (!login) {
+					props.changeLoginEmpty();
+				}
+				setLogin(target.value);
 			} else if(target.name === 'password'){
+				if (!password) {
+					props.changePasswordEmpty();
+				}
 				setPassword(target.value);
 			}
 		}
-		
 	};
 
+	const checkInputs = () => {
+		if (!login || !password) {
+			if (!login && !password) {
+				props.changeLoginEmpty();
+				props.changePasswordEmpty();
+			} else if (!login) {
+				props.changeLoginEmpty();
+			} else if (!password) {
+				props.changePasswordEmpty();
+			}
+			return;
+		} else saveChanges;
+	};
 
 	const saveChanges = () => {
-		if (!email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/) || password.length < 6) {
-			if(!email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)){
+		if (!login.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/) || password.length < 6) {
+			if(!login.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)){
 				document.getElementById('unvalidEmailWarning')?.classList.remove('inputBlock_warning__unactive');
 				document.getElementById('unvalidEmailWarning')?.classList.add('inputBlock_warning');
 			}
@@ -103,8 +179,8 @@ export default function LogIn ({handleChangeAuthorisation}: authorisedProps){
 			return;
 		}
 
-		localStorage.setItem('authorisedUser', JSON.stringify(`email:${email}, password:${password}`));
-		handleChangeAuthorisation();
+		localStorage.setItem('authorisedUser', JSON.stringify(`login:${login}, password:${password}`));
+		props.handleChangeAuthorisation();
 	} ;
 
 
@@ -114,17 +190,19 @@ export default function LogIn ({handleChangeAuthorisation}: authorisedProps){
 				<InputLabel htmlFor="unvalidEmailWarning">
                     Логин
 				</InputLabel>
-				<Input type='text' name= 'email' id='emailInputSI' value={email} onChange={handleChange} />
+				<LoginInput loginEmpty={props.loginEmpty} type='text' name= 'login' id='loginInputSI' value={login} onChange={handleChange} />
+				<LoginInputWarning loginEmpty={props.loginEmpty}>Обязательное поле</LoginInputWarning>
 			</InputBlock>
 			<InputBlock>
 				<InputLabel >
                     Пароль
 				</InputLabel>
-				<Input type='text' name='password' id='passwordInputSI' value={password} onChange={handleChange} />
+				<PasswordInput passwordEmpty={props.passwordEmpty} type='text' name='password' id='passwordInputSI' value={password} onChange={handleChange} />
+				<PasswordInputWarning passwordEmpty={props.passwordEmpty}>Обязательное поле</PasswordInputWarning>
 			</InputBlock>
 			<Checkbox type ='checkbox' id="squaredCheckbox"/>
 			<CheckboxLable htmlFor='squaredCheckbox'>Запомнить пароль</CheckboxLable>
-			<button className='signInBlock_button' onClick={saveChanges}>Submit</button>
+			<Button onClick={checkInputs}>Войти</Button>
 		</Login>
 	);
 	

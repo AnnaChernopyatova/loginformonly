@@ -9,20 +9,31 @@ const Body = styled.div`
   height: 100%;
 `;
 
-function App() {
+function App(): JSX.Element {
 	const [authorised, setAuthorised] = React.useState<boolean>();
+
+	const [loginEmpty, setLoginEmpty] = React.useState<boolean>(false);
+	const [passwordEmpty, setPasswordEmpty] = React.useState<boolean>(false);
 
 	const handleChange = () => {
 		setTimeout(() => {
 			setAuthorised(!authorised);
 		}, 3000);
 	};
+
+	const changeLoginEmpty = () => {
+		setLoginEmpty(!loginEmpty);
+	};
 	
+	const changePasswordEmpty = () => {
+		setPasswordEmpty(!passwordEmpty);
+	};
+
 	return (
 		<Body> 
 			<Logo />
 			<Routes>
-				<Route path='login' element={<LogIn handleChangeAuthorisation={handleChange}/>} />
+				<Route path='login' element={<LogIn handleChangeAuthorisation={handleChange} loginEmpty = {loginEmpty} passwordEmpty = {passwordEmpty} changeLoginEmpty ={changeLoginEmpty} changePasswordEmpty = {changePasswordEmpty}/>} />
 			</Routes>
 		</Body>
 	);
