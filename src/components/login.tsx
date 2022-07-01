@@ -6,7 +6,7 @@ const Login = styled.div`
     width: 37%;
     height: 60vh;
     margin: auto;
-    margin-top: 10%;
+    margin-top: 12%;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 
     @media screen and (min-width: 500px) and (max-width: 1200px) {
@@ -120,6 +120,38 @@ const Button = styled.button`
     &:active {
         box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
     }
+
+    &:disabled {
+        background-color: #8497ff;
+        cursor: unset;
+        &:active {
+            box-shadow: none;
+        }
+    }
+`;
+
+const NoUser = styled.div`
+    box-sizing: border-box;
+    margin-bottom: 2vh;
+    padding-top: 1.6vh;
+    padding-left: 3%;
+    width: 100%;
+    height: 5.5vh;
+    background-color: #df828237;
+    border: 1px solid #df8282;
+    border-radius: 8px;
+`;
+
+const ExclamationMark = styled.div`
+    box-sizing: border-box;
+    margin-right: 3%;
+    padding-left: 6px;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: #faaabb;
+    border-radius: 50%;
+    color: #eb6f6f;
 `;
 
 interface LoginProps {
@@ -134,6 +166,8 @@ interface LoginProps {
 export default function LogIn (props: LoginProps): JSX.Element {
 	const [login, setLogin] = React.useState<string>('');
 	const [password, setPassword] = React.useState<string>('');
+	const [loading, setLoading] = React.useState<boolean>(false);
+	const [noUser, setNoUser] = React.useState<boolean>(false);
 
 	const handleChange = (e: React.SyntheticEvent): void => {
 		const target = e.target as HTMLInputElement;
@@ -163,21 +197,17 @@ export default function LogIn (props: LoginProps): JSX.Element {
 				props.changePasswordEmpty();
 			}
 			return;
-		} else saveChanges;
+		} else saveChanges();
 	};
 
 	const saveChanges = () => {
-		if (!login.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/) || password.length < 6) {
-			if(!login.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)){
-				document.getElementById('unvalidEmailWarning')?.classList.remove('inputBlock_warning__unactive');
-				document.getElementById('unvalidEmailWarning')?.classList.add('inputBlock_warning');
+		setLoading(!loading);
+		setTimeout(() => {
+			if (!login.match(/steve.jobs@example.com/)) {
+				setNoUser(true);
+				return;
 			}
-			if(password.length < 6) {
-				document.getElementById('unvalidPasswordWarning')?.classList.remove('inputBlock_warning__unactive');
-				document.getElementById('unvalidPasswordWarning')?.classList.add('inputBlock_warning');
-			}
-			return;
-		}
+		}, 2000);
 
 		localStorage.setItem('authorisedUser', JSON.stringify(`login:${login}, password:${password}`));
 		props.handleChangeAuthorisation();
@@ -186,6 +216,12 @@ export default function LogIn (props: LoginProps): JSX.Element {
 
 	return(
 		<Login>
+			{noUser && 
+                <NoUser>
+                	<ExclamationMark>!</ExclamationMark>
+                    Пользователя не существует
+			    </NoUser>
+			}
 			<InputBlock>
 				<InputLabel htmlFor="unvalidEmailWarning">
                     Логин
@@ -202,8 +238,7 @@ export default function LogIn (props: LoginProps): JSX.Element {
 			</InputBlock>
 			<Checkbox type ='checkbox' id="squaredCheckbox"/>
 			<CheckboxLable htmlFor='squaredCheckbox'>Запомнить пароль</CheckboxLable>
-			<Button onClick={checkInputs}>Войти</Button>
+			<Button disabled = {loading} onClick={checkInputs}>Войти</Button>
 		</Login>
 	);
-	
 }
