@@ -21,12 +21,12 @@ function App(): JSX.Element {
 		}, 3000);
 	};
 
-	const changeLoginEmpty = () => {
-		setLoginEmpty(!loginEmpty);
+	const changeLoginEmpty = (state: boolean) => {
+		setLoginEmpty(state);
 	};
 	
-	const changePasswordEmpty = () => {
-		setPasswordEmpty(!passwordEmpty);
+	const changePasswordEmpty = (state: boolean) => {
+		setPasswordEmpty(state);
 	};
 
 	return (

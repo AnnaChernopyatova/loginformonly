@@ -61,11 +61,11 @@ const InputWarning = styled.p`
 `;
 
 const LoginInputWarning = styled(InputWarning)<{loginEmpty: boolean}>`
-    display: ${props => !props.loginEmpty && 'none'};
+    display: ${props => props.loginEmpty && 'none'};
 `;
 
 const PasswordInputWarning = styled(InputWarning)<{passwordEmpty: boolean}>`
-    display: ${props => !props.passwordEmpty && 'none'};
+    display: ${props => props.passwordEmpty && 'none'};
 `;
 
 const Checkbox = styled.input`
@@ -156,8 +156,8 @@ const ExclamationMark = styled.div`
 
 interface LoginProps {
 	handleChangeAuthorisation: () => void;
-    changeLoginEmpty: () => void;
-    changePasswordEmpty: () => void;
+    changeLoginEmpty: (state: boolean) => void;
+    changePasswordEmpty: (state: boolean) => void;
     loginEmpty: boolean;
     passwordEmpty: boolean;
 }
@@ -173,13 +173,13 @@ export default function LogIn (props: LoginProps): JSX.Element {
 		const target = e.target as HTMLInputElement;
 		if (target) {
 			if(target.name === 'login'){
-				if (!login) {
-					props.changeLoginEmpty();
+				if (login) {
+					props.changeLoginEmpty(false);
 				}
 				setLogin(target.value);
 			} else if(target.name === 'password'){
-				if (!password) {
-					props.changePasswordEmpty();
+				if (password) {
+					props.changePasswordEmpty(false);
 				}
 				setPassword(target.value);
 			}
@@ -189,12 +189,12 @@ export default function LogIn (props: LoginProps): JSX.Element {
 	const checkInputs = () => {
 		if (!login || !password) {
 			if (!login && !password) {
-				props.changeLoginEmpty();
-				props.changePasswordEmpty();
+				props.changeLoginEmpty(true);
+				props.changePasswordEmpty(true);
 			} else if (!login) {
-				props.changeLoginEmpty();
+				props.changeLoginEmpty(true);
 			} else if (!password) {
-				props.changePasswordEmpty();
+				props.changePasswordEmpty(true);
 			}
 			return;
 		} else saveChanges();
@@ -217,10 +217,10 @@ export default function LogIn (props: LoginProps): JSX.Element {
 	return(
 		<Login>
 			{noUser && 
-                <NoUser>
-                	<ExclamationMark>!</ExclamationMark>
-                    Пользователя не существует
-			    </NoUser>
+				<NoUser>
+					<ExclamationMark>!</ExclamationMark>
+					Пользователя не существует
+				</NoUser>
 			}
 			<InputBlock>
 				<InputLabel htmlFor="unvalidEmailWarning">
