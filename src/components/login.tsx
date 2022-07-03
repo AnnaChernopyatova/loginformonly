@@ -1,13 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { baseTheme } from '../styles/theme';
 
 const Login = styled.div`
-    box-sizing: border-box;
     width: 37%;
     height: 60vh;
     margin: auto;
     margin-top: 12%;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
 
     @media screen and (min-width: 500px) and (max-width: 1200px) {
         width: 60%;
@@ -23,7 +23,6 @@ const InputLabel = styled.label`
     margin-bottom: 1vh;
     display: block;
     font-size: 0.99em;
-    font-weight: 500;
 `;
 
 const Input = styled.input`
@@ -33,10 +32,10 @@ const Input = styled.input`
     height: 5.5vh;
     border: none;
     border-radius: 8px;
-    background-color: #e2e2e25a;
+    background-color: ${baseTheme.colors.background};
     font-size: 0.99em;
     &:focus {
-        outline: 2px solid #e2e2e2a0;
+        outline: 2px solid ${baseTheme.colors.outline};
     }
 `;
 
@@ -57,15 +56,16 @@ const PasswordInput = styled(Input)<{passwordEmpty: boolean}>`
 const InputWarning = styled.p`
     margin-top: 1%;
     font-size: 0.8em;
-    color: #df8282;
+    color: ${baseTheme.colors.warning};
+    display: block;
 `;
 
 const LoginInputWarning = styled(InputWarning)<{loginEmpty: boolean}>`
-    display: ${props => props.loginEmpty && 'none'};
+    display: ${props => !props.loginEmpty && 'none'};
 `;
 
 const PasswordInputWarning = styled(InputWarning)<{passwordEmpty: boolean}>`
-    display: ${props => props.passwordEmpty && 'none'};
+    display: ${props => !props.passwordEmpty && 'none'};
 `;
 
 const Checkbox = styled.input`
@@ -73,13 +73,13 @@ const Checkbox = styled.input`
     -moz-appearance: none;
     width: 22px;
     height: 22px;
-    border: 1px solid #111;
+    border: 1px solid ${baseTheme.colors.black};
     border-radius: 4px;
     cursor: pointer;
     outline: none;
 
     &:checked {
-        background: #ffffff;
+        background: ${baseTheme.colors.white};
         top: 1px;
     }
 `;
@@ -101,7 +101,7 @@ const CheckboxLable = styled.label`
     width: 16px;
     height: 16px;
     border-radius: 3px;
-    background-color: #006eff;
+    background-color: ${baseTheme.colors.blue};
     }
 `;
 
@@ -109,12 +109,12 @@ const Button = styled.button`
     margin-top: 3vh;
     width: 100%;
     height: 5.5vh;
-    background-color: #006eff;
-    color: #fff;
+    background-color: ${baseTheme.colors.blue};
+    color: ${baseTheme.colors.white};
     border: none;
     border-radius: 8px;
     font-size: 0.97em;
-    font-weight: 600;
+    font-weight: ${baseTheme.font.bold};
     cursor: pointer;
 
     &:active {
@@ -122,7 +122,7 @@ const Button = styled.button`
     }
 
     &:disabled {
-        background-color: #8497ff;
+        background-color: ${baseTheme.colors.blueDisabled};
         cursor: unset;
         &:active {
             box-shadow: none;
@@ -137,8 +137,8 @@ const NoUser = styled.div`
     padding-left: 3%;
     width: 100%;
     height: 5.5vh;
-    background-color: #df828237;
-    border: 1px solid #df8282;
+    background-color: ${baseTheme.colors.warningTransparent};
+    border: 1px solid ${baseTheme.colors.warning};
     border-radius: 8px;
 `;
 
@@ -155,11 +155,12 @@ const ExclamationMark = styled.div`
 `;
 
 interface LoginProps {
-	handleChangeAuthorisation: () => void;
     changeLoginEmpty: (state: boolean) => void;
     changePasswordEmpty: (state: boolean) => void;
+    setLogged: () => void;
     loginEmpty: boolean;
     passwordEmpty: boolean;
+    login: string;
 }
 
 
@@ -168,20 +169,23 @@ export default function LogIn (props: LoginProps): JSX.Element {
 	const [password, setPassword] = React.useState<string>('');
 	const [loading, setLoading] = React.useState<boolean>(false);
 	const [noUser, setNoUser] = React.useState<boolean>(false);
+	const [save, setSave] = React.useState<boolean>(false);
+	const navigate = useNavigate();
 
 	const handleChange = (e: React.SyntheticEvent): void => {
 		const target = e.target as HTMLInputElement;
 		if (target) {
 			if(target.name === 'login'){
+				setNoUser(false);
+				setLogin(target.value);
 				if (login) {
 					props.changeLoginEmpty(false);
 				}
-				setLogin(target.value);
 			} else if(target.name === 'password'){
+				setPassword(target.value);
 				if (password) {
 					props.changePasswordEmpty(false);
 				}
-				setPassword(target.value);
 			}
 		}
 	};
@@ -200,17 +204,27 @@ export default function LogIn (props: LoginProps): JSX.Element {
 		} else saveChanges();
 	};
 
+	const setCheckbox = (e: React.SyntheticEvent) => {
+		const target = e.target as HTMLInputElement;
+		setSave(target.checked);
+	};
+
 	const saveChanges = () => {
-		setLoading(!loading);
+		setLoading(true);
 		setTimeout(() => {
 			if (!login.match(/steve.jobs@example.com/)) {
 				setNoUser(true);
-				return;
+				setLoading(false);
+			} else {
+				setLoading(false);
+				if (save) {
+					console.log('im here');
+					localStorage.setItem('authorisedUser', JSON.stringify(`login:${login}, password:${password}`));
+				}
+				props.setLogged();
+				navigate('/home');
 			}
 		}, 2000);
-
-		localStorage.setItem('authorisedUser', JSON.stringify(`login:${login}, password:${password}`));
-		props.handleChangeAuthorisation();
 	} ;
 
 
@@ -219,24 +233,24 @@ export default function LogIn (props: LoginProps): JSX.Element {
 			{noUser && 
 				<NoUser>
 					<ExclamationMark>!</ExclamationMark>
-					Пользователя не существует
+					Пользователя {login} не существует
 				</NoUser>
 			}
 			<InputBlock>
 				<InputLabel htmlFor="unvalidEmailWarning">
                     Логин
 				</InputLabel>
-				<LoginInput loginEmpty={props.loginEmpty} type='text' name= 'login' id='loginInputSI' value={login} onChange={handleChange} />
+				<LoginInput loginEmpty={props.loginEmpty} type='text' name= 'login' value={login} onChange={handleChange} />
 				<LoginInputWarning loginEmpty={props.loginEmpty}>Обязательное поле</LoginInputWarning>
 			</InputBlock>
 			<InputBlock>
 				<InputLabel >
                     Пароль
 				</InputLabel>
-				<PasswordInput passwordEmpty={props.passwordEmpty} type='text' name='password' id='passwordInputSI' value={password} onChange={handleChange} />
+				<PasswordInput passwordEmpty={props.passwordEmpty} type='text' name='password' value={password} onChange={handleChange} />
 				<PasswordInputWarning passwordEmpty={props.passwordEmpty}>Обязательное поле</PasswordInputWarning>
 			</InputBlock>
-			<Checkbox type ='checkbox' id="squaredCheckbox"/>
+			<Checkbox type ='checkbox' id="squaredCheckbox" onChange={setCheckbox}/>
 			<CheckboxLable htmlFor='squaredCheckbox'>Запомнить пароль</CheckboxLable>
 			<Button disabled = {loading} onClick={checkInputs}>Войти</Button>
 		</Login>

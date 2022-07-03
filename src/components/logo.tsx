@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
+import { baseTheme } from '../styles/theme';
 
 const Logotype = styled.h1`
     text-transform: uppercase;
     font-size: 4em;
-    font-weight: 600;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: ${baseTheme.font.bold};
     width: fit-content;
     margin: auto;
     margin-top: 3%;
