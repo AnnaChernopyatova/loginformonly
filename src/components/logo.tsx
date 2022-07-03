@@ -4,7 +4,7 @@ import { baseTheme } from '../styles/theme';
 
 const Logotype = styled.h1`
     text-transform: uppercase;
-    font-size: 4em;
+    font-size: ${baseTheme.font.size.x4};
     font-weight: ${baseTheme.font.bold};
     width: fit-content;
     margin: auto;

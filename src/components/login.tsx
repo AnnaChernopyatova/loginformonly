@@ -22,7 +22,7 @@ const InputBlock = styled.div`
 const InputLabel = styled.label`
     margin-bottom: 1vh;
     display: block;
-    font-size: 0.99em;
+    font-size: ${baseTheme.font.size.x2};
 `;
 
 const Input = styled.input`
@@ -33,7 +33,7 @@ const Input = styled.input`
     border: none;
     border-radius: 8px;
     background-color: ${baseTheme.colors.background};
-    font-size: 0.99em;
+    font-size: ${baseTheme.font.size.x2};
     &:focus {
         outline: 2px solid ${baseTheme.colors.outline};
     }
@@ -55,7 +55,7 @@ const PasswordInput = styled(Input)<{passwordEmpty: boolean}>`
 
 const InputWarning = styled.p`
     margin-top: 1%;
-    font-size: 0.8em;
+    font-size: ${baseTheme.font.size.x1};
     color: ${baseTheme.colors.warning};
     display: block;
 `;
@@ -90,7 +90,7 @@ const CheckboxLable = styled.label`
     bottom: 6px;
     padding-left: 2.5%;
     cursor: pointer;
-    font-size: 0.97em;
+    font-size: ${baseTheme.font.size.x2};
     
     ${Checkbox}:checked + &:after {
     content: "";
@@ -113,7 +113,7 @@ const Button = styled.button`
     color: ${baseTheme.colors.white};
     border: none;
     border-radius: 8px;
-    font-size: 0.97em;
+    font-size: ${baseTheme.font.size.x2};
     font-weight: ${baseTheme.font.bold};
     cursor: pointer;
 
@@ -149,9 +149,9 @@ const ExclamationMark = styled.div`
     display: inline-block;
     width: 20px;
     height: 20px;
-    background-color: #faaabb;
+    background-color: ${baseTheme.colors.lightPink};
     border-radius: 50%;
-    color: #eb6f6f;
+    color: ${baseTheme.colors.pink};
 `;
 
 interface LoginProps {

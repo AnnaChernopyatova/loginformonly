@@ -14,7 +14,7 @@ const Body = styled.div`
 `;
 
 const Greeting = styled.div`
-    font-size: 1.7em;
+    font-size: ${baseTheme.font.size.x3};
 `;
 
 const BoldText = styled.span`
