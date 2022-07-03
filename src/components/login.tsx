@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { baseTheme } from '../styles/theme';
+import LoginContext from './context/loginContext';
 
 const Login = styled.div`
     width: 37%;
@@ -44,17 +45,13 @@ const Input = styled.input`
 `;
 
 const LoginInput = styled(Input)<{loginEmpty: boolean}>`
-    &:focus {
-        outline: ${props => props.loginEmpty && '1px solid#df8282'};
-        caret-color: ${props => props.loginEmpty && '#df8282'};
-    }
+    outline: ${props => props.loginEmpty && '1px solid#df8282'};
+    caret-color: ${props => props.loginEmpty && '#df8282'};
 `;
 
 const PasswordInput = styled(Input)<{passwordEmpty: boolean}>`
-    &:focus {
-        outline: ${props => props.passwordEmpty && '1px solid #df8282'};
-        caret-color: ${props => props.passwordEmpty && '#df8282'};
-    }
+    outline: ${props => props.passwordEmpty && '1px solid #df8282'};
+    caret-color: ${props => props.passwordEmpty && '#df8282'};
 `;
 
 const InputWarning = styled.p`
@@ -141,7 +138,7 @@ const NoUser = styled.div`
     padding-left: 3%;
     width: 100%;
     height: 5.5vh;
-    min-height: 60px;
+    min-height: 55px;
     background-color: ${baseTheme.colors.warningTransparent};
     border: 1px solid ${baseTheme.colors.warning};
     border-radius: 8px;
@@ -179,7 +176,6 @@ interface LoginProps {
     setLogged: () => void;
     loginEmpty: boolean;
     passwordEmpty: boolean;
-    login: string;
 }
 
 
@@ -190,6 +186,7 @@ export default function LogIn (props: LoginProps): JSX.Element {
 	const [noUser, setNoUser] = React.useState<boolean>(false);
 	const [save, setSave] = React.useState<boolean>(false);
 	const navigate = useNavigate();
+	const [loginContext, setLoginContext] = useContext(LoginContext);
 
 	const handleChange = (e: React.SyntheticEvent): void => {
 		const target = e.target as HTMLInputElement;
@@ -239,6 +236,7 @@ export default function LogIn (props: LoginProps): JSX.Element {
 				if (save) {
 					console.log('im here');
 					localStorage.setItem('authorisedUser', JSON.stringify(`login:${login}, password:${password}`));
+					setLoginContext(login);
 				}
 				props.setLogged();
 				navigate('/home');
@@ -252,7 +250,7 @@ export default function LogIn (props: LoginProps): JSX.Element {
 			{noUser && 
 				<NoUser>
 					<ExclamationMark>!</ExclamationMark>
-					Пользователя {login} не существует
+					Пользователя {loginContext} не существует
 				</NoUser>
 			}
 			<InputBlock>

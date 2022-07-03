@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
+import LoginContext from './components/context/loginContext';
 import Home from './components/Home';
 import LogIn from './components/Login';
 import Logo from './components/Logo';
@@ -19,7 +20,7 @@ function App(): JSX.Element {
 	const [loginEmpty, setLoginEmpty] = React.useState<boolean>(false);
 	const [passwordEmpty, setPasswordEmpty] = React.useState<boolean>(false);
 	const [isLogged, setIsLogged] = React.useState<boolean>(true);
-	const [login, setLogin] = React.useState<string>('');
+	const [loginContext, setLoginContext] = React.useState<string>('');
 
 	React.useEffect(():void => {
 		const data:string|null = localStorage.getItem('authorisedUser');
@@ -29,7 +30,7 @@ function App(): JSX.Element {
 			const regexp = /login:(.*?),/;
 			const login = regexp.exec(data);
 			if (login && typeof login[1] === 'string') {
-				setLogin(login[1]);
+				setLoginContext(login[1]);
 			}
 		}
 	},[]);
@@ -47,13 +48,15 @@ function App(): JSX.Element {
 	};
 
 	return (
-		<Body> 
-			<Logo />
-			<Routes>
-				<Route path='/login' element={<LogIn loginEmpty = {loginEmpty} setLogged = {setLogged} passwordEmpty = {passwordEmpty} login = {login} changeLoginEmpty ={changeLoginEmpty} changePasswordEmpty = {changePasswordEmpty}/>} />
-				<Route path='/home' element={<Home isLogged = {isLogged} login = {login} />} />
-			</Routes>
-		</Body>
+		<LoginContext.Provider value={[loginContext, setLoginContext]}>
+			<Body> 
+				<Logo />
+				<Routes>
+					<Route path='/' element={<LogIn loginEmpty = {loginEmpty} setLogged = {setLogged} passwordEmpty = {passwordEmpty} changeLoginEmpty ={changeLoginEmpty} changePasswordEmpty = {changePasswordEmpty}/>} />
+					<Route path='/home' element={<Home isLogged = {isLogged} />} />
+				</Routes>
+			</Body>
+		</LoginContext.Provider>
 	);
 }
 

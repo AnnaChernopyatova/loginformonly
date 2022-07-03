@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { baseTheme } from '../styles/theme';
+import LoginContext from './context/loginContext';
 
 const Body = styled.div`
     margin-top: 24vh;
@@ -40,13 +41,13 @@ const Button = styled.button`
 
 interface HomeProps {
     isLogged: boolean;
-    login: string
 }
 
 export default function Home (props: HomeProps): JSX.Element {
 	const navigate = useNavigate();
+	const [loginContext, setLoginContext] = useContext(LoginContext);
 	const Navigate = (() => {
-		navigate('/login');
+		navigate('/');
 	});
 
 	React.useEffect(() => {
@@ -58,7 +59,7 @@ export default function Home (props: HomeProps): JSX.Element {
 	return (
 		<Body>
 			<Greeting>
-            Здравствуйте, <BoldText>{props.login}</BoldText>
+            Здравствуйте, <BoldText>{loginContext}</BoldText>
 			</Greeting>
 			<Button onClick={Navigate}>Выйти</Button>
 		</Body>
