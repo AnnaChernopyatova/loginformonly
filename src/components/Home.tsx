@@ -11,9 +11,14 @@ const Body = styled.div`
     width: 100vw;
     justify-content: space-between;
     align-items: center;
+
+    @media screen and (max-height: 700px) {
+        height: 15vh;
+    }
 `;
 
 const Greeting = styled.div`
+    text-align: center;
     font-size: ${baseTheme.font.size.x3};
 `;
 
@@ -23,7 +28,9 @@ const BoldText = styled.span`
 
 const Button = styled.button`
     width: 15vw;
+    min-width: 90px;
     height: 4vh;
+    min-height: 35px;
     border: none;
     border-radius: 5px;
     background-color: ${baseTheme.colors.background};

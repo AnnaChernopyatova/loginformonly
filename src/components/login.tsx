@@ -9,9 +9,12 @@ const Login = styled.div`
     margin: auto;
     margin-top: 12%;
 
-    @media screen and (min-width: 500px) and (max-width: 1200px) {
+    @media screen and (min-width: 500px) and (max-width: 1000px) {
         width: 60%;
-        margin-top: 15%;
+        margin-top: 10%;
+    }
+    @media screen and (max-width: 499px) {
+        width: 80%;
     }
 `;
 
@@ -30,6 +33,7 @@ const Input = styled.input`
     padding-left: 3%;
     width: 100%;
     height: 5.5vh;
+    min-height: 40px;
     border: none;
     border-radius: 8px;
     background-color: ${baseTheme.colors.background};
@@ -137,9 +141,24 @@ const NoUser = styled.div`
     padding-left: 3%;
     width: 100%;
     height: 5.5vh;
+    min-height: 60px;
     background-color: ${baseTheme.colors.warningTransparent};
     border: 1px solid ${baseTheme.colors.warning};
     border-radius: 8px;
+    word-wrap: break-word;
+
+    @media screen and (min-width:701px) and (max-width: 1200px) {
+        min-height: 80px;
+    }
+
+    @media screen and (min-width: 500px) and (max-width: 700px) {
+        min-height: 20%;
+    }
+
+   
+    @media screen and (max-width: 499px) {
+        min-height: 80px;
+    }
 `;
 
 const ExclamationMark = styled.div`

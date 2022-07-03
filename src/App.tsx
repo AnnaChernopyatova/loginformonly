@@ -8,10 +8,11 @@ import { baseTheme } from './styles/theme';
 
 
 const Body = styled.div`
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  font-family: ${baseTheme.font.family};
+	margin: 0%;
+  	width: 100%;
+  	height: 100%;
+  	box-sizing: border-box;
+  	font-family: ${baseTheme.font.family};
 `;
 
 function App(): JSX.Element {
